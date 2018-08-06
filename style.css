@@ -16,3 +16,28 @@ body
 	width:300px;
 	background: #e8f3f9;
 }
+.sidebar ul.category
+{
+	margin:1em;
+}
+.sidebar ul.category li 
+{
+	list-style-type:none;
+}
+.sidebar ul.category li ul 
+{
+	margin-left: 1em;
+}
+.content
+{
+	width:100%;
+	padding:1em;
+}
+.content p.breadcrumb-string
+{
+    margin-bottom: 0.5em;
+}
+.content p.breadcrumb-string a 
+{
+	/*padding-left:1em;*/
+}
