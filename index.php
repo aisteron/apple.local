@@ -23,9 +23,26 @@ include 'catalog.php'; // функционал меню в сайдбаре и �
 		<div class="content">
 			<p class="breadcrumb-string"><?=$breadcrumbs; ?></p>
 			<hr>
-			<?php //print_arr($categories_tree); 
+			
 
-			var_dump($ids);
+			<!-- пагинация */-->
+			<div class="pagination">
+				<?=$pagination?>
+			</div>
+
+			<?php
+			// вывод товаров
+			if($products)
+			{
+				foreach ($products as $product) {
+					echo '<a href="?product='.$product["id"].'">'.$product["title"].'</a><br>';
+				}
+
+			} else 
+			{
+				echo '<p>Товаров не найдено</p>';
+			}
+			
 			?>
 		</div>
 	</div>
