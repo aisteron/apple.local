@@ -21,29 +21,20 @@ include 'catalog.php'; // функционал меню в сайдбаре и �
 			</ul>
 		</div>
 		<div class="content">
+			
 			<p class="breadcrumb-string"><?=$breadcrumbs; ?></p>
 			<hr>
-			
 
-			<!-- пагинация */-->
-			<div class="pagination">
-				<?=$pagination?>
-			</div>
-
-			<?php
-			// вывод товаров
-			if($products)
+		<?php 
+			if($get_one_product)
 			{
-				foreach ($products as $product) {
-					echo '<a href="'.PATH.'product.php?product='.$product["id"].'">'.$product["title"].'</a><br>';
-				}
-
-			} else 
-			{
-				echo '<p>Товаров не найдено</p>';
+				print_arr($get_one_product);
 			}
-			
-			?>
+			else 
+			{
+				echo '<p>Такого товара не существует</p>';
+			}
+		?>
 		</div>
 	</div>
 

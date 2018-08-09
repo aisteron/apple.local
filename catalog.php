@@ -8,9 +8,26 @@ $categories_tree = map_tree($categories);
 $categories_menu = categories_to_string($categories_tree);
 
 
-// крошки
 
-$id = (int)$_GET['category'];
+
+// крошки и крошки для продукта
+
+if(isset($_GET['product']))
+{
+	
+	$product_id = (int)$_GET['product'];
+	
+	$get_one_product = get_one_product($product_id); // массив данных продукта
+	$id = $get_one_product['parent'];	// получаем ID категории
+
+} else 
+{
+	$id = (int)$_GET['category'];
+}
+
+
+
+
 
 $breadcrumbs_array = breadcrumbs($categories, $id); 
 // "линейный" массив $categories. функция лежит в function.php
@@ -19,12 +36,19 @@ $breadcrumbs_array = breadcrumbs($categories, $id);
 
 if($breadcrumbs_array)
 {
-	$breadcrumbs .= '<a href="/">Главная</a> / ';
+	$breadcrumbs .= '<a href="'.PATH.'">Главная</a> / ';
 	foreach ($breadcrumbs_array as $id => $title) {
-		$breadcrumbs .= "<a href='?category={$id}'>{$title}</a> / ";
+		$breadcrumbs .= "<a href='".PATH."?category={$id}'>{$title}</a> / ";
 	}
-	$breadcrumbs = rtrim($breadcrumbs, " / ");
-	$breadcrumbs = preg_replace("#(.+)?<a.+>(.+)</a>$#", "$1$2", $breadcrumbs);
+	if(!isset($get_one_product)) // когда идет обращение не к продукту, а к категории
+	{
+		$breadcrumbs = rtrim($breadcrumbs, " / ");
+		$breadcrumbs = preg_replace("#(.+)?<a.+>(.+)</a>$#", "$1$2", $breadcrumbs);
+	} else 
+	{
+		$breadcrumbs .= $get_one_product['title'];
+	}
+	
 } else 
 {
 	$breadcrumbs .= '<a href="/">Главная</a> / 404 not found';
@@ -37,7 +61,12 @@ $ids = !$ids ? $id : rtrim($ids, ',');
 
 //$products = get_products($ids);
 
-// пагинация
+/*
+*
+*	ПАГИНАЦИЯ
+*
+*/
+
 
 // кол-во товаров на страницу
 
@@ -74,3 +103,15 @@ $start_pos = ($page - 1) * $perpage;
 $pagination = pagination($page, $count_pages);
 
 $products = get_products($ids, $start_pos, $perpage);
+
+// Получение отдельного товара
+
+function get_one_product($product_id)
+{
+	global $connection;
+	$query = "SELECT * FROM products WHERE id = $product_id LIMIT 1";
+	$res = mysqli_query($connection, $query);
+
+ 	return mysqli_fetch_assoc($res);
+
+}
