@@ -147,8 +147,10 @@ function count_goods($ids)
 
 // Постраничная навигация
 
-function pagination ($page, $count_pages)
+function pagination ($page, $count_pages, $modrew = true)
 {
+	// $modrew - флаг включения ЧПУ
+
 	// << < 3 4 5 6 7 > >>
 	// $back - ссылка НАЗАД
 	// $forward - ссылка ВПЕРЕД
@@ -160,17 +162,36 @@ function pagination ($page, $count_pages)
 	// $page1right - первая страница справа
 
 	$uri = '?';
-	// если есть параметры в запросе (адресной строке)
-	if($_SERVER['QUERY_STRING'])
+
+	if(!$modrew)
 	{
-		foreach ($_GET as $key => $value) {
-			//echo "$key => $value <br>";
-			if($key !='page')
-			{
-				$uri .= "{$key}={$value}&";
+		// если есть параметры в запросе (адресной строке)
+		if($_SERVER['QUERY_STRING'])
+		{
+			foreach ($_GET as $key => $value) {
+				//echo "$key => $value <br>";
+				if($key !='page')
+				{
+					$uri .= "{$key}={$value}&";
+				}
 			}
 		}
+	} else 
+	{
+		$url = $_SERVER['REQUEST_URI'];
+		$url = explode('?', $url);
+		//print_arr($url);
+		if(isset($url[1]) &&$url[1] != '')
+		{
+			$params = explode("&", $url[1]);
+			foreach ($params as $param) {
+				if(!preg_match('#page#', $param)) $uri .= "{$param}&amp;";
+			}
+
+		}
+
 	}
+	
 
 	if($page > 1) $back = "<a href='{$uri}page=".($page-1)."'>&lt;</a> ";
 

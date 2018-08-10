@@ -38,7 +38,7 @@ if($breadcrumbs_array)
 {
 	$breadcrumbs .= '<a href="'.PATH.'">Главная</a> / ';
 	foreach ($breadcrumbs_array as $id => $title) {
-		$breadcrumbs .= "<a href='".PATH."?category={$id}'>{$title}</a> / ";
+		$breadcrumbs .= "<a href='".PATH."category/{$id}'>{$title}</a> / ";
 	}
 	if(!isset($get_one_product)) // когда идет обращение не к продукту, а к категории
 	{
@@ -70,7 +70,7 @@ $ids = !$ids ? $id : rtrim($ids, ',');
 
 // кол-во товаров на страницу
 
-$perpage = 5;
+$perpage = (int)$_COOKIE['perpage'] ? (int)$_COOKIE['perpage'] : PERPAGE;
 
 // общее кол-во товаров
 
