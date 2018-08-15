@@ -21,20 +21,39 @@ include 'catalog.php'; // функционал меню в сайдбаре и �
 			</ul>
 		</div>
 		<div class="content">
-			
 			<p class="breadcrumb-string"><?=$breadcrumbs; ?></p>
 			<hr>
 
-		<?php 
-			if($get_one_product)
+			<div>
+				<select name="perpage" id="perpage">
+					<?php foreach ($option_perpage as $option): ?>
+						<option value="<?=$option?>"
+							<?php if ($perpage == $option) echo "selected";?> >
+							<?=$option?></option>	
+					<?php endforeach ?>
+					
+				</select>
+			</div>			
+
+			<!-- пагинация */-->
+			<div class="pagination">
+				<?=$pagination?>
+			</div>
+
+			<?php
+			// вывод товаров
+			if($products)
 			{
-				print_arr($get_one_product);
-			}
-			else 
+				foreach ($products as $product) {
+					echo '<a href="'.PATH.'product/'.$product["alias"].'">'.$product["title"].'</a><br>';
+				}
+
+			} else 
 			{
-				echo '<p>Такого товара не существует</p>';
+				echo '<p>Товаров не найдено</p>';
 			}
-		?>
+			
+			?>
 		</div>
 	</div>
 
@@ -45,6 +64,11 @@ include 'catalog.php'; // функционал меню в сайдбаре и �
 	<script>
 		$(document).ready(function(){
 			$('.category').dcAccordion();
+			$('#perpage').change(function(){
+				let perpage = $(this).val();
+				$.cookie('perpage', perpage, {expires:1});
+				window.location = location.href;
+			})
 		});
 	</script>
 </div>	
