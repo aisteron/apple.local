@@ -1,14 +1,10 @@
-<?php
-
-
-?>
-
+<?php defined("DIRECT_ACCESS") or die('Access denied');?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>Каталог</title>
-	<link rel="stylesheet" href="<?=PATH?>style.css">
+	<link rel="stylesheet" href="<?=PATH?>views/style.css">
 </head>
 <body>
 	<div class="wrapper">
@@ -37,9 +33,9 @@
 	</div>
 
 <div class="footer-scripts">
-	<script src="<?=PATH?>js/jquery-1.9.0.min.js"></script>
-	<script src="<?=PATH?>js/jquery.accordion.js"></script>
-	<script src="<?=PATH?>js/jquery.cookie.js"></script>
+	<script src="<?=PATH?>views/js/jquery-1.9.0.min.js"></script>
+	<script src="<?=PATH?>views/js/jquery.accordion.js"></script>
+	<script src="<?=PATH?>views/js/jquery.cookie.js"></script>
 	<script>
 		$(document).ready(function(){
 			$('.category').dcAccordion();

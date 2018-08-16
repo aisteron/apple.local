@@ -1,4 +1,6 @@
 AddDefaultCharset utf-8
+# спрятать листинг каталога
+Options -Indexes
 
 RewriteEngine On
 # RewriteRule ^product/([a-z-0-9-]+) product.php?product=$1
@@ -6,5 +8,7 @@ RewriteEngine On
 
 #QSA - Query String Append
 
-
+# если мы обращаемся НЕ к реально существующему правилу, то тогда выполняй правило:
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule .* index.php

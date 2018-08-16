@@ -1,35 +1,69 @@
 <?php
-
+error_reporting(E_ALL);
+define('DIRECT_ACCESS', TRUE);
 include 'config.php';
 include 'functions.php';
+
+$id = null;
+
+// функция роутинга (маршрутизации)
+// путь к скрипту без имени домена
+
+$url = $_SERVER['REQUEST_URI'];
+
+$routes = array(
+
+	array('url' => '#\/$|\?#', 'view' => 'category'),
+	array('url' => '#product/(?P<product_alias>[a-z0-9-]+)#i', 'view' => 'product'),
+	array('url' => '#category/(?P<id>\d+)#', 'view' => 'category'),
+	
+);
+
+
+foreach ($routes as $route) {
+	if(preg_match($route['url'], $url, $match))
+	{
+		$view = $route['view'];
+
+		break;
+
+	}
+}
+
+
+if(empty($match))
+{
+	include 'views/404.php';
+	exit;
+}
+
+extract($match);
+
+// $id - ID категории
+// $product_alias - alias продукта
+// $view - вид для подключения
+
+
 
 $categories = get_cat();
 $categories_tree = map_tree($categories);
 $categories_menu = categories_to_string($categories_tree);
 
-
 // крошки и крошки для продукта
 
-if(isset($_GET['product']))
+if(isset($product_alias))
 {
-	
-	//$product_id = (int)$_GET['product'];
-	$product_alias = $_GET['product'];
 	
 	//$get_one_product = get_one_product($product_id); // массив данных продукта
 	$get_one_product = get_one_product($product_alias); // массив данных продукта
 	$id = $get_one_product['parent'];	// получаем ID категории
 
-} else 
-{
-	$id = (int)$_GET['category'];
 }
 
 
 
-
-
-$breadcrumbs_array = breadcrumbs($categories, $id); 
+$breadcrumbs_array = breadcrumbs($categories, $id);
+$breadcrumbs = null; // просто инициализация
 // "линейный" массив $categories. функция лежит в function.php
 
 // return true (array not empty) || return false
@@ -51,7 +85,7 @@ if($breadcrumbs_array)
 	
 } else 
 {
-	$breadcrumbs .= '<a href="/">Главная</a> / 404 not found';
+	$breadcrumbs .= '<a href="/">Главная</a>';
 }
 
 // все ID дочерних категорий
@@ -70,7 +104,7 @@ $ids = !$ids ? $id : rtrim($ids, ',');
 
 // кол-во товаров на страницу
 
-$perpage = (int)$_COOKIE['perpage'] ? (int)$_COOKIE['perpage'] : PERPAGE;
+$perpage = (isset($_COOKIE['perpage']) && (int)$_COOKIE['perpage']) ? (int)$_COOKIE['perpage'] : PERPAGE;
 
 // общее кол-во товаров
 
@@ -118,4 +152,4 @@ function get_one_product($product_alias)
 
 }
 
-include 'views/product.php';
+include 'views/'.$view.'.php';

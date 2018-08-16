@@ -48,6 +48,8 @@ function map_tree($dataset) {
 
 function categories_to_string($data)
 {
+	$data = $data;
+	$string = null; // просто инициализируем переменную
 	foreach($data as $item)
 	{
 		$string .= categories_to_template($item);
@@ -60,7 +62,7 @@ function categories_to_string($data)
 function categories_to_template($category)
 {
 	ob_start();
-	include 'category_template.php';
+	include 'views/category_template.php';
 	return ob_get_clean();
 }
 
@@ -70,7 +72,7 @@ function categories_to_template($category)
 function breadcrumbs($array, $id)
 {
 	if(!$id) return false;
-
+	$array = array();
 	$breadcrumbs_array = array();
 	
 	for($i = 0; $i < count($array); $i++) {
@@ -89,7 +91,9 @@ function breadcrumbs($array, $id)
 
 function cats_id($array, $id)
 {
+
 	if(!$id) return false;
+	$data = null; // просто инициализация
 
 	foreach ($array as $item) {
 		if($item['parent'] == $id)
@@ -160,7 +164,7 @@ function pagination ($page, $count_pages, $modrew = true)
 	// $page1left - первая страница слева
 	// $page2right - вторая страница справа
 	// $page1right - первая страница справа
-
+	$back = $forward = $start_page = $end_page = $page2left = $page1left = $page2right = $page1right = null;// просто инициализация
 	$uri = '?';
 
 	if(!$modrew)
