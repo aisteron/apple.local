@@ -1,5 +1,5 @@
 <?php
-
+defined("DIRECT_ACCESS") or die('Access denied');
 // Получение массива категорий
 
 function get_cat()
@@ -67,87 +67,6 @@ function categories_to_template($category)
 }
 
 
-// крошки
-
-function breadcrumbs($array, $id)
-{
-	if(!$id) return false;
-	$array = array();
-	$breadcrumbs_array = array();
-	
-	for($i = 0; $i < count($array); $i++) {
-		if($array[$id])
-		{
-			$breadcrumbs_array[$array[$id]['id']] = $array[$id]['title'];
-			$id = $array[$id]['parent'];
-		} else break;
-	}
-	return array_reverse($breadcrumbs_array, true);
-}
-
-
-// Получение ID дочерних категорий. Потомков потомков
-
-
-function cats_id($array, $id)
-{
-
-	if(!$id) return false;
-	$data = null; // просто инициализация
-
-	foreach ($array as $item) {
-		if($item['parent'] == $id)
-		{
-			$data .= $item['id']. ',';
-			$data .= cats_id($array, $item['id']);
-		}
-	}
-	return $data;
-}
-
-// получение списка товаров по ID
-
-function get_products($ids, $start_pos, $perpage)
-{
-
-	global $connection;
-	if($ids)
-	{
-		$query = "SELECT * FROM products WHERE parent IN($ids) ORDER BY title LIMIT $start_pos, $perpage";
-	} else 
-	{
-		$query = "SELECT * FROM products ORDER BY title LIMIT $start_pos, $perpage";
-	}
-
-	$res = mysqli_query($connection, $query);
-
-	$products = array();
-	while($row = mysqli_fetch_assoc($res))
-	{
-		$products[] = $row;
-	}
-	return $products;
-}
-
-// общее количество товаров
-
-function count_goods($ids)
-{
-	global $connection;
-	if(!$ids)
-	{
-		$query = "SELECT COUNT(*) FROM products";
-	}
-	else 
-	{
-		$query = "SELECT COUNT(*) FROM products WHERE parent IN($ids)";
-	}
-
-	$res = mysqli_query($connection, $query);
-
-	$count_goods = mysqli_fetch_row($res);
-	return $count_goods[0];
-}
 
 // Постраничная навигация
 
@@ -216,3 +135,29 @@ function pagination ($page, $count_pages, $modrew = true)
 
 	return $start_page.$back.$page2left.$page1left.$page.$page1right.$page2right.$forward.$end_page;
 }
+
+
+
+// крошки
+
+function breadcrumbs($array, $id)
+{
+
+	if(!$id) return false;
+	
+
+	$breadcrumbs_array = array();
+	
+	for($i = 0; $i < count($array); $i++) {
+
+		if(isset($array[$id]) && $array[$id])
+		{
+			$breadcrumbs_array[$array[$id]['id']] = $array[$id]['title'];
+			$id = $array[$id]['parent'];
+		} else break;
+	}
+
+	return array_reverse($breadcrumbs_array, true);
+}
+
+

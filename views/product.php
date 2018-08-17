@@ -10,9 +10,7 @@
 	<div class="wrapper">
 
 		<div class="sidebar">
-			<ul class='category'>
-				<?php echo $categories_menu; ?>
-			</ul>
+			<?php include 'sidebar.php';?>
 		</div>
 		<div class="content">
 			
